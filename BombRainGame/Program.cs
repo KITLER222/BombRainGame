@@ -36,7 +36,7 @@ namespace BombRainGame
                 Thread.Sleep(200); //делаем небольшую паузу чтобы скорость перемещение игровых объектов не была слишком быстрой
             }
             Console.Clear(); //когда жизни закончились очищаем игровой экран
-            Console.WriteLine("Игра окончена!"); //выводим сообщение об окончании игры
+            Console.WriteLine("*Игра окончена!*"); //выводим сообщение об окончании игры
         }
 
         /// <summary>
@@ -58,6 +58,16 @@ namespace BombRainGame
         /// </summary>
         static void MoveBombs()
         {
+            for (int x = 0; x < width; x++)
+            {
+                if (field[x, height - 1] == '*')
+                {
+                    if(x != playerX)
+                    {
+                        field[x, height - 1] = ' ';
+                    }
+                }
+            }
             for (int y = height - 2; y >= 0; y--) //проходим по всем строкам снизу вверх (иначе мы затрем падующие бомбы)
             {
                 for (int x = 0; x < width; x++)
@@ -102,7 +112,7 @@ namespace BombRainGame
         /// </summary>
         static void DrawField()
         {
-            Console.Clear(); //очищаем экран перед новой отрисовкой
+            Console.SetCursorPosition(0,0); //очищаем экран перед новой отрисовкой
 
             for (int y = 0; y < height; y++) //проходим по всем строкам игрового поля
             {
@@ -112,13 +122,25 @@ namespace BombRainGame
                     {
                         Console.Write("@"); //отображаем игрока символом '@'
                     }
+                    else if(field[x,y] == '*')
+                    {
+                        Console.Write('*');
+                    }
                     else
                     {
-                        Console.Write(field[x,y] == '*' ? "*" : "."); //инече отображаем либо бомбу '*' либо пустоту '.'
+                        Console.Write(" "); //инече отображаем либо бомбу '*' либо пустоту '.'
                     }
                 }
-                Console.WriteLine(); //после каждой строки переходим на новую строку
+                if (y == height - 1)
+                {
+                    Console.WriteLine("\n====================");
+                }
+                else
+                {
+                    Console.WriteLine(); //после каждой строки переходим на новую строку
+                }
             }
+            Console.WriteLine("--------------------");
             Console.WriteLine($"\n Жизни: {lives}"); //после поля выводим колличество оставшихся жизней
         }
 
@@ -128,7 +150,7 @@ namespace BombRainGame
         /// </summary>
         static void HandleInput()
         {
-            if (Console.KeyAvailable) //проверяем была ли нажата какая либо клавиша
+            while (Console.KeyAvailable) //проверяем была ли нажата какая либо клавиша
             {
                 ConsoleKey key = Console.ReadKey(true).Key; //стчитываем нажатую клавишу (без отображения символа на экране)
 
