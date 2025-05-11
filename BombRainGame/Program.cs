@@ -8,13 +8,12 @@ namespace BombRainGame
         /// <summary>
         /// Блок с переменными
         /// </summary>
-        const int width = 20; //ширина игрового поля (колличество символов по горизонтали)
-        const int height = 20; //длина игрового поля (колличество строк по вертикали)
-        static int playerX = width / 2; //начальная позиция игрока по оси x (по центру по горизонтали)
-        static int lives = 3; //количестов жизней у игрока. Когда жизни закончатся игра завершится
-        static Random random = new Random(); //генератор случайных чисел для появления бомб
-        //игровое поле представленное двумерным массивом символов
-        static char[,] field = new char[width, height]; //каждый элемент может быть - '.' - пустым или '*' - бомба
+        const int width = 20;
+        const int height = 20;
+        static int playerX = width / 2;
+        static int lives = 3;
+        static Random random = new Random();
+        static char[,] field = new char[width, height];
 
         /// <summary>
         /// Главный метод программы который запускается при первом старте приложения
@@ -22,21 +21,20 @@ namespace BombRainGame
         /// <param name="args"></param>
         static void Main(string[] args) 
         {
-            Console.CursorVisible = false; //скрываем мигающий курсор для крассивого отображения игры
+            Console.CursorVisible = false;
 
-            //главный игровой цикл повторяется до тех пор пока у игрока есть жизни
             while(lives > 0)
             {
-                HandleInput(); //обработка нажатий клавиш для перемещения игрока
-                SpawnBomb(); //случайное появление новой бомбы в верхней строке
-                MoveBombs(); //перемещаем все бомбы на одну строку вниз
-                CheckCollision(); //проверям не столкнулся ли игрок с бомбой
-                DrawField(); //отображаем все игровое поле на экране
+                HandleInput();
+                SpawnBomb();
+                MoveBombs();
+                CheckCollision();
+                DrawField();
 
-                Thread.Sleep(200); //делаем небольшую паузу чтобы скорость перемещение игровых объектов не была слишком быстрой
+                Thread.Sleep(200);
             }
-            Console.Clear(); //когда жизни закончились очищаем игровой экран
-            Console.WriteLine("*Игра окончена!*"); //выводим сообщение об окончании игры
+            Console.Clear();
+            Console.WriteLine("*Игра окончена!*");
         }
 
         /// <summary>
@@ -45,10 +43,10 @@ namespace BombRainGame
         /// </summary>
         static void SpawnBomb()
         {
-            if (random.Next(0, 5) == 0) //с вероятностью 1 к 5 (20%) появится новая бомба
+            if (random.Next(0, 5) == 0)
             {
-                int x = random.Next(0, width); //выбираем случайную горизонтальную позицию для новой бомбы
-                field[x, 0] = '*'; //помещвем бомбу в верхнюю строку поля
+                int x = random.Next(0, width);
+                field[x, 0] = '*';
             }
         }
 
@@ -68,22 +66,22 @@ namespace BombRainGame
                     }
                 }
             }
-            for (int y = height - 2; y >= 0; y--) //проходим по всем строкам снизу вверх (иначе мы затрем падующие бомбы)
+            for (int y = height - 2; y >= 0; y--)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    if (field[x,y] == '*') //если в ячейке уже находится бомба 
+                    if (field[x,y] == '*') 
                     {
-                        field[x, y] = ' '; //убираем бомбу с текущего места
-                        if(y + 1 < height) //если ниже еще есть место на поле
+                        field[x, y] = ' ';
+                        if(y + 1 < height)
                         {
-                            field[x, y + 1] = '*'; //перемищваем бомбу вниз на одну строку
+                            field[x, y + 1] = '*';
                         }
                     }
                 }
             }
 
-            for (int x = 0; x < width; x++) //после перещмещения очищаем верхнюю строку от старой бомбы
+            for (int x = 0; x < width; x++)
             {
                 if(field[x, 0] != '*') 
                 {
@@ -98,11 +96,11 @@ namespace BombRainGame
         /// </summary>
         static void CheckCollision()
         {
-            if (field[playerX, height - 1] == '*') //проверяем стоит ли бомба на позиции игрока
+            if (field[playerX, height - 1] == '*')
             {
-                lives--; //уменьшаем количество жизней на 1
-                Console.Beep(); //издаем звуковой сигнал при действии
-                field[playerX, height - 1] = ' '; //убираем бомбу с позиции игрока
+                lives--;
+                Console.Beep();
+                field[playerX, height - 1] = ' ';
             }
         }
 
@@ -112,15 +110,15 @@ namespace BombRainGame
         /// </summary>
         static void DrawField()
         {
-            Console.SetCursorPosition(0,0); //очищаем экран перед новой отрисовкой
+            Console.SetCursorPosition(0,0);
 
-            for (int y = 0; y < height; y++) //проходим по всем строкам игрового поля
+            for (int y = 0; y < height; y++)
             {
-                for(int x = 0; x < width; x++) //проходим по всем колонкам игрового поля
+                for(int x = 0; x < width; x++)
                 {
-                    if(y == height - 1 && x == playerX) //если эта позиция игрока (последняя строка и последний столбец игрока)
+                    if(y == height - 1 && x == playerX)
                     {
-                        Console.Write("@"); //отображаем игрока символом '@'
+                        Console.Write("@");
                     }
                     else if(field[x,y] == '*')
                     {
@@ -128,7 +126,7 @@ namespace BombRainGame
                     }
                     else
                     {
-                        Console.Write(" "); //инече отображаем либо бомбу '*' либо пустоту '.'
+                        Console.Write(" ");
                     }
                 }
                 if (y == height - 1)
@@ -137,11 +135,11 @@ namespace BombRainGame
                 }
                 else
                 {
-                    Console.WriteLine(); //после каждой строки переходим на новую строку
+                    Console.WriteLine();
                 }
             }
             Console.WriteLine("--------------------");
-            Console.WriteLine($"\n Жизни: {lives}"); //после поля выводим колличество оставшихся жизней
+            Console.WriteLine($"\n Жизни: {lives}");
         }
 
         /// <summary>
@@ -150,18 +148,18 @@ namespace BombRainGame
         /// </summary>
         static void HandleInput()
         {
-            while (Console.KeyAvailable) //проверяем была ли нажата какая либо клавиша
+            while (Console.KeyAvailable)
             {
-                ConsoleKey key = Console.ReadKey(true).Key; //стчитываем нажатую клавишу (без отображения символа на экране)
+                ConsoleKey key = Console.ReadKey(true).Key;
 
-                if (key == ConsoleKey.LeftArrow && playerX > 0) //если нажата стрелка влево и игрок не стоит у левого края 
+                if (key == ConsoleKey.LeftArrow && playerX > 0) 
                 {
-                    playerX--; //перемещаем игрока влево
+                    playerX--;
 
                 }
-                else if (key == ConsoleKey.RightArrow && playerX < width - 1) //если нажата стрелка вправо и игрок не стоит у правого края
+                else if (key == ConsoleKey.RightArrow && playerX < width - 1)
                 {
-                    playerX++; //то мы перемещаем игрока вправо
+                    playerX++;
                 }
             }
         }
