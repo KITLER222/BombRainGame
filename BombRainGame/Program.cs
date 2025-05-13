@@ -31,7 +31,7 @@ namespace BombRainGame
                 CheckCollision();
                 DrawField();
 
-                Thread.Sleep(200);
+                Thread.Sleep(50);
             }
             Console.Clear();
             Console.WriteLine("*Игра окончена!*");
